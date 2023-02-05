@@ -14,8 +14,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from rest_framework_simplejwt import views as jwt_views
+from epic_events import views
+
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
+router.register(r'groups', views.GroupViewSet)
+router.register(r'clients', views.ClientViewSet, 'clients')
+router.register(r'contracts', views.ContractViewSet, 'contracts')
+router.register(r'events', views.EventViewSet, 'events')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('signup/', views.RegisterView.as_view(), name='auth_register'),
+    path('drf/', include('rest_framework.urls', namespace='rest_framework')),
+    path('login/', jwt_views.TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('login/refresh/', jwt_views.TokenRefreshView.as_view(),
+         name='token_refresh'),
 ]
