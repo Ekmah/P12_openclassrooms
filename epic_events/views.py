@@ -44,7 +44,9 @@ class ClientViewSet(viewsets.ModelViewSet):
         serializer.save(sales_contact=sales_contact)
 
     def get_queryset(self):
-        queryset = self.request.user.client_set.all()
+        queryset = self.request.user.client_set.all() | Client.objects.filter(
+            event__in=self.request.user.event_set.all())
+        queryset = queryset.distinct()
         last_name = self.request.query_params.get('last_name')
         if last_name is not None:
             queryset = queryset.filter(last_name=last_name)
