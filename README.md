@@ -1,4 +1,4 @@
-##Installation:
+## Installation:
 - Clonez le projet  
 - Installez les dépendances:  
 `pip install requirements.txt`
